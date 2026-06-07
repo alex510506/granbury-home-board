@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase/server";
+import { createClient as createServiceClient } from "@supabase/supabase-js";
 import { redirect } from "next/navigation";
 
 export async function signUp(
@@ -40,7 +41,13 @@ export async function signUp(
   }
 
   if (data.user) {
-    const { error: profileError } = await supabase.from("profiles").insert({
+    // Use service role client to bypass RLS — the user session isn't
+    // established on the server yet right after signUp.
+    const admin = createServiceClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+    const { error: profileError } = await admin.from("profiles").insert({
       id: data.user.id,
       role,
       full_name: fullName,
