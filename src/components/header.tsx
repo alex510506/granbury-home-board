@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
 export async function Header() {
@@ -8,28 +9,40 @@ export async function Header() {
   } = await supabase.auth.getUser();
 
   return (
-    <header className="bg-brand text-white">
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4">
-        <Link href="/" className="text-2xl font-bold tracking-tight">
-          Granbury Home Board
+    <header className="border-b-4 border-brand bg-white">
+      <nav className="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+        <Link href="/" className="flex items-center gap-3">
+          <Image
+            src="/granbury-logo.png"
+            alt="Granbury"
+            width={60}
+            height={40}
+            className="object-contain"
+          />
+          <span
+            className="text-2xl font-bold tracking-tight text-brand"
+            style={{ fontFamily: "var(--font-playfair), Georgia, serif" }}
+          >
+            Home Board
+          </span>
         </Link>
 
-        <div className="flex items-center gap-4 text-lg">
-          <Link href="/requests" className="hover:underline">
+        <div className="flex items-center gap-4 text-lg font-medium text-brand">
+          <Link href="/requests" className="hover:text-accent">
             Browse Jobs
           </Link>
-          <Link href="/providers" className="hover:underline">
+          <Link href="/providers" className="hover:text-accent">
             Providers
           </Link>
           {user ? (
             <>
-              <Link href="/dashboard" className="hover:underline">
+              <Link href="/dashboard" className="hover:text-accent">
                 Dashboard
               </Link>
               <form action="/api/auth/sign-out" method="POST">
                 <button
                   type="submit"
-                  className="rounded-lg bg-white px-4 py-2 font-semibold text-brand hover:bg-gray-100"
+                  className="rounded-lg border-2 border-brand px-4 py-2 font-semibold text-brand hover:bg-brand hover:text-white"
                 >
                   Sign Out
                 </button>
@@ -37,10 +50,7 @@ export async function Header() {
             </>
           ) : (
             <>
-              <Link
-                href="/sign-in"
-                className="hover:underline"
-              >
+              <Link href="/sign-in" className="hover:text-accent">
                 Sign In
               </Link>
               <Link
